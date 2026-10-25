@@ -73,10 +73,11 @@ export function SubmissionsTable({ refreshKey, onReviewed }: Props) {
   const meta = result?.meta ?? null;
   const error = !loading ? result?.error : "";
 
-  function handleFilterChange(value: string) {
-    setStatus(value as StatusFilter);
-    setPage(1); // a new filter always starts from page 1
-  }
+  function handleFilterChange(value: string | null) {
+  if (!value) return;
+  setStatus(value as StatusFilter);
+  setPage(1); 
+}
 
   return (
     <Card>

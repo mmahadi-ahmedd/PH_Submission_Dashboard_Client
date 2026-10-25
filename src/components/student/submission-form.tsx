@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -42,19 +42,20 @@ type FormValues = z.infer<typeof schema>;
 const fields: (keyof FormValues)[] = ["projectName", "repoUrl", "liveLink", "description"];
 
 export function SubmissionForm({ onSuccess }: { onSuccess: () => void }) {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    reset,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-    defaultValues: { projectName: "", repoUrl: "", liveLink: "", description: "" },
-  });
+ const {
+  register,
+  handleSubmit,
+  setError,
+  reset,
+  control,
+  formState: { errors, isSubmitting },
+} = useForm<FormValues>({
+  resolver: zodResolver(schema),
+  defaultValues: { projectName: "", repoUrl: "", liveLink: "", description: "" },
+});
 
-  const descriptionLength = watch("description")?.length ?? 0;
+  const description = useWatch({ control, name: "description" });
+const descriptionLength = description?.length ?? 0;
 
   const onSubmit = async (values: FormValues) => {
     try {
